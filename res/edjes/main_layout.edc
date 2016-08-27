@@ -49,8 +49,8 @@ collections {
             mouse_events: 0;
             description {
                state: "default" 0.0;
-               rel1.relative: 0.5 0.6;
-               rel2.relative: 0.5 0.6;
+               rel1.relative: 0.5 0.58;
+               rel2.relative: 0.5 0.58;
                min: 240 80;
                text.text: "Theater Mode";
                text.size: 28;
@@ -62,16 +62,18 @@ collections {
             mouse_events: 0;
             description {
                state: "default" 0.0;
-               rel1.relative: 0.5 0.72;
-               rel2.relative: 0.5 0.72;
+               rel1.relative: 0.5 0.7;
+               rel2.relative: 0.5 0.7;
                min: 240 80;
                text.text: "OFF";
-               text.size: 24;
+               text.font: "Sans:style=Bold";
+               text.size: 30;
             }
             description {
                state: "enabled" 0.0;
                inherit: "default" 0.0;
                text.text: "ON";
+               color: 221 44 0 255;
             }
          }
       }
@@ -95,6 +97,20 @@ collections {
             source: "part.main.bg";
             signal: "mouse,clicked,1";
             action: SIGNAL_EMIT "signal.main.clicked" "*";
+         }
+         program {
+            name: "program.main.state.enabled";
+            source: "mycode";
+            signal: "signal.main.state.enabled";
+            action: STATE_SET "enabled" 0.0;
+            target: "part.main.state";
+         }
+         program {
+            name: "program.main.state.disabled";
+            source: "mycode";
+            signal: "signal.main.state.disabled";
+            action: STATE_SET "default" 0.0;
+            target: "part.main.state";
          }
       }
    }

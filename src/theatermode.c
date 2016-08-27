@@ -29,13 +29,13 @@ main_click_cb(void *data, Evas_Object *obj, const char *emission, const char *so
 	if (wid->state) {
 		device_display_set_brightness(0, wid->brightness);
 		device_display_change_state(DISPLAY_STATE_NORMAL);
-		elm_object_part_text_set(wid->layout, "part.main.state", "OFF");
+		elm_layout_signal_emit(wid->layout, "signal.main.state.disabled", "mycode");
 		wid->state = EINA_FALSE;
 	} else {
 		device_display_get_brightness(0, &wid->brightness);
 		device_display_set_brightness(0, 1);
 		device_display_change_state(DISPLAY_STATE_SCREEN_DIM);
-		elm_object_part_text_set(wid->layout, "part.main.state", "ON");
+		elm_layout_signal_emit(wid->layout, "signal.main.state.enabled", "mycode");
 		wid->state = EINA_TRUE;
 	}
 }
@@ -63,10 +63,10 @@ widget_instance_create(widget_context_h context, bundle *content, int w, int h, 
 	elm_layout_file_set(layout, edj_path, "group.main");
 	evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_win_resize_object_add(wid->win, layout);
-	elm_object_part_text_set(layout, "part.main.state", "OFF");
 	evas_object_show(layout);
 	wid->layout = layout;
 
+	elm_layout_signal_emit(wid->layout, "signal.main.state.disabled", "mycode");
 	elm_object_signal_callback_add(layout, "signal.main.clicked", "*", main_click_cb, wid);
 
 	/* Show window after base gui is set up */
@@ -106,7 +106,7 @@ widget_instance_resume(widget_context_h context, void *user_data) {
 		device_display_get_brightness(0, &brightness);
 		if (brightness > 1) {
 			device_display_change_state(DISPLAY_STATE_NORMAL);
-			elm_object_part_text_set(wid->layout, "part.main.state", "OFF");
+			elm_layout_signal_emit(wid->layout, "signal.main.state.disabled", "mycode");
 			wid->brightness = brightness;
 			wid->state = EINA_FALSE;
 		}
