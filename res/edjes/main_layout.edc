@@ -1,0 +1,101 @@
+collections {
+   images {
+      image: "ic_weekend_white_48dp.png" COMP;
+      image: "circle_clip.png" COMP;
+   }
+   group {
+      name: "group.main";
+      parts {
+         part {
+            name: "part.main.bg";
+            type: RECT;
+            clip_to: "part.main.clip";
+            description {
+               state: "default" 0.0;
+               color: 0 0 0 0;
+            }
+            description {
+               state: "pressed" 0.0;
+               color: 255 87 34 204;
+            }
+         }
+         part {
+            name: "part.main.clip";
+            type: IMAGE;
+            description {
+               state: "default" 0.0;
+               image.normal: "circle_clip.png";
+               rel1.relative: 0.5 0.5;
+               rel2.relative: 0.5 0.5;
+               min: 240 240;
+            }
+         }
+         part {
+            name: "part.main.icon";
+            type: IMAGE;
+            mouse_events: 0;
+            description {
+               state: "default" 0.0;
+               image.normal: "ic_weekend_white_48dp.png";
+               rel1.relative: 0.5 0.4;
+               rel2.relative: 0.5 0.4;
+               min: 96 96;
+               fixed: 1 1;
+            }
+         }
+         part {
+            name: "part.main.label";
+            type: TEXT;
+            mouse_events: 0;
+            description {
+               state: "default" 0.0;
+               rel1.relative: 0.5 0.6;
+               rel2.relative: 0.5 0.6;
+               min: 240 80;
+               text.text: "Theater Mode";
+               text.size: 28;
+            }
+         }
+         part {
+            name: "part.main.state";
+            type: TEXT;
+            mouse_events: 0;
+            description {
+               state: "default" 0.0;
+               rel1.relative: 0.5 0.72;
+               rel2.relative: 0.5 0.72;
+               min: 240 80;
+               text.text: "OFF";
+               text.size: 24;
+            }
+            description {
+               state: "enabled" 0.0;
+               inherit: "default" 0.0;
+               text.text: "ON";
+            }
+         }
+      }
+      programs {
+         program {
+            name: "program.main.bg.pressed";
+            source: "part.main.bg";
+            signal: "mouse,down,1";
+            action: STATE_SET "pressed" 0.0;
+            target: "part.main.bg";
+         }
+         program {
+            name: "program.main.bg.released";
+            source: "part.main.bg";
+            signal: "mouse,up,1";
+            action: STATE_SET "default" 0.0;
+            target: "part.main.bg";
+         }
+         program {
+            name: "program.main.bg.clicked";
+            source: "part.main.bg";
+            signal: "mouse,clicked,1";
+            action: SIGNAL_EMIT "signal.main.clicked" "*";
+         }
+      }
+   }
+}
