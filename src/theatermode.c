@@ -5,11 +5,13 @@
 #include <dlog.h>
 #include <display.h>
 #include "theatermode.h"
+#include "sound_volume_model.h"
 
 typedef struct widget_instance_data {
 	Evas_Object *win;
 	Evas_Object *layout;
 	int brightness;
+	SoundVolumeModel *soundVolumeModel;
 	Eina_Bool state;
 } widget_instance_data_s;
 
@@ -27,11 +29,21 @@ static void
 main_click_cb(void *data, Evas_Object *obj, const char *emission, const char *source) {
 	widget_instance_data_s *wid = data;
 	if (wid->state) {
+		if (wid->soundVolumeModel != NULL) {
+			sound_volume_model_set_current_volumes(wid->soundVolumeModel);
+			free(wid->soundVolumeModel);
+			wid->soundVolumeModel = NULL;
+		}
+
 		device_display_set_brightness(0, wid->brightness);
 		device_display_change_state(DISPLAY_STATE_NORMAL);
 		elm_layout_signal_emit(wid->layout, "signal.main.state.disabled", "mycode");
 		wid->state = EINA_FALSE;
 	} else {
+		if (wid->soundVolumeModel != NULL) free(wid->soundVolumeModel);
+		wid->soundVolumeModel = sound_volume_model_get_current_volumes_n();
+		sound_volume_model_mute();
+
 		device_display_get_brightness(0, &wid->brightness);
 		device_display_set_brightness(0, 1);
 		device_display_change_state(DISPLAY_STATE_SCREEN_DIM);
@@ -43,6 +55,7 @@ main_click_cb(void *data, Evas_Object *obj, const char *emission, const char *so
 static int
 widget_instance_create(widget_context_h context, bundle *content, int w, int h, void *user_data) {
 	widget_instance_data_s *wid = malloc(sizeof(widget_instance_data_s));
+	wid->soundVolumeModel = NULL;
 	wid->brightness = 50;
 	wid->state = EINA_FALSE;
 
@@ -83,6 +96,7 @@ widget_instance_destroy(widget_context_h context, widget_app_destroy_type_e reas
 	widget_app_context_get_tag(context,(void**)&wid);
 
 	if (wid->win) {
+		if (wid->soundVolumeModel != NULL) free(wid->soundVolumeModel);
 		evas_object_del(wid->win);
 		free(wid);
 	}
@@ -105,6 +119,12 @@ widget_instance_resume(widget_context_h context, void *user_data) {
 		int brightness;
 		device_display_get_brightness(0, &brightness);
 		if (brightness > 1) {
+			if (wid->soundVolumeModel != NULL) {
+				sound_volume_model_set_current_volumes(wid->soundVolumeModel);
+				free(wid->soundVolumeModel);
+				wid->soundVolumeModel = NULL;
+			}
+
 			device_display_change_state(DISPLAY_STATE_NORMAL);
 			elm_layout_signal_emit(wid->layout, "signal.main.state.disabled", "mycode");
 			wid->brightness = brightness;
