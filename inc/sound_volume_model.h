@@ -5,6 +5,7 @@ typedef struct sound_volume_model {
 	int system;
 	int notification;
 	int alarm;
+	int ringtone;
 	int media;
 	int voice;
 } SoundVolumeModel;

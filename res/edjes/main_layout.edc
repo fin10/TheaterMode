@@ -16,7 +16,7 @@ collections {
             }
             description {
                state: "pressed" 0.0;
-               color: 255 87 34 25;
+               color: 255 87 34 51;
             }
          }
          part {
