@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tizen_unittest>
+<targetProject>TheaterMode</targetProject>
+<targetFile>theatermode.c</targetFile>
+<targetObjectFile>C:/Users/fin10/workspaceForTizen/TheaterMode/TheaterMode/Debug/src/sound_volume_model.o</targetObjectFile>
+</tizen_unittest>
